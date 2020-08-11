@@ -16,6 +16,7 @@
 		<h3
 		v-for="i in r"
 		>{{n}} x {{i}} = {{x(i)}}</h4>
+		<h2>ผลรวม = {{s(row)}}</h2>
 	</div>
 
 	<script>
@@ -25,55 +26,65 @@
 				n: 3,
 				before_n:1,
 				row: 12,
+				
 			},
 			methods:{
 				x: function(row){
 					return this.n*row
+				},
+				s: function(row){
+					count = 0
+					for (var i = 1; i <= row; i++) {
+						count += (this.n * i)
+					}
+					return count
+				
+				},
+			},
+			watch:{
+				n: function(a,b){
+					this.before_n = b
 				}
 			},
 			computed: {
 				r: function(){
 					return parseInt(this.row)
 				},
-				x2: function(){
-					return this.n*2
-				},
-				x3: function(){
-					return this.n*3
-				},
-				x4: function(){
-					return this.n*4
-				},
-				x5: function(){
-					return this.n*5
-				},
-				x6: function(){
-					return this.n*6
-				},
-				x7: function(){
-					return this.n*7
-				},
-				x8: function(){
-					return this.n*8
-				},
-				x9: function(){
-					return this.n*9
-				},
-				x10: function(){
-					return this.n*10
-				},
-				x11: function(){
-					return this.n*11
-				},
-				x12: function(){
-					return this.n*12
-				}
+				//x2: function(){
+				//	return this.n*2
+				//},
+				//x3: function(){
+				//	return this.n*3
+				//},
+				//x4: function(){
+				//	return this.n*4
+				//},
+				//x5: function(){
+				//	return this.n*5
+				//},
+				//x6: function(){
+				//	return this.n*6
+				//},
+				//x7: function(){
+				//	return this.n*7
+				//},
+				//x8: function(){
+				//	return this.n*8
+				//},
+				//x9: function(){
+				//	return this.n*9
+				//},
+				//x10: function(){
+				//	return this.n*10
+				//},
+				//x11: function(){
+				//	return this.n*11
+				//},
+				//x12: function(){
+				//	return this.n*12
+				//}
 			},
-			watch:{
-				n: function(a,b){
-					this.before_n = b
-				}
-			}
+			
 		})
 	</script>
 </body>
