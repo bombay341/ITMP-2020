@@ -15,31 +15,22 @@
 	<script>
 		fetch('https://jsonplaceholder.typicode.com/users')
 			.then(response => response.json())
-			.then(json => { console.log(json) })
+			.then(json => { 
+				console.log(json) 
+				app.users = json
+			})
 		let app = new Vue({
 			el: '#app',
 			data: {
 				users: [
 				{ 
 					"id": 1,
-					"name": "Leanne Graham",
-					"username": "Bret",
-					"email": "Sincere@april.biz",
-					"website": "hildegard.org",
+					"name": "_____",
+					"username": "______",
+					"email": "____",
+					"website": "______",
 					"company": {
-						"name": "Romaguera-Crona",
-						"catchPhrase": "Multi-layered client-server neural-net",
-						"bs": "harness real-time e-markets"
-					}
-				},
-				{ 
-					"id": 2,
-					"name": "Leanne Graham2",
-					"username": "Bret2",
-					"email": "Sincere@april.biz",
-					"website": "hildegard.org",
-					"company": {
-						"name": "Romaguera-Crona",
+						"name": "_____",
 						"catchPhrase": "Multi-layered client-server neural-net",
 						"bs": "harness real-time e-markets"
 					}
