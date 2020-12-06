@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Lab - Multimedia Programming 2563 ITKMITL</title>
+    <link rel="stylesheet" type="text/css" href="../src/reset.css">
+    <link rel="stylesheet" type="text/css" href="lab.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="canvas">
+        <section id="canvas_header">
+            <div>
+
+                {{score}} คะแนน
+            </div>
+        </section>
+        <section id="canvas_main" :data-play="play">
+            <main>
+                <div class="box _path" v-for="i in 14" :data-pst="i"></div>
+                <div class="box _toggle" data-pst="10" :data-isrightarrow="isRightArrow"></div>
+
+                <div class="box _fruit" v-for="i in fruits" :data-pst="i.pst" :data-type="i.type"></div>
+
+                <div class="box _origin"></div>
+                <div class="box _12" data-pst="12"></div>
+                <div class="box _16" data-pst="16"></div>
+
+            </main>
+        </section>
+        <section id="canvas_footer">
+            <div v-if="play" class="btn" id="toggle" @click="toggle()">
+                Switch
+            </div>
+            <div v-if="!play" class="btn" id="endgame" @click="restart">
+                Restart
+            </div>
+        </section>
+    </div>
+
+    <script>
+        function rand(start, stop) {
+            let shift = (stop - start) + 1
+            return Math.floor(Math.random() * 100 % shift) + start
+        }
+        let nextFruitID = 5
+        let speed = 1000
+        let app = new Vue({
+            el: '#canvas',
+            data: {
+                isRightArrow: 1,
+                play: true,
+                time: 0,
+                score: 0,
+                fruits: [{ id: 1, type: 'red', pst: 6, run: true, step: 1 },
+                { id: 2, type: 'yellow', pst: 3, run: true, step: 1 },
+                { id: 3, type: 'yellow', pst: 2, run: true, step: 1 },
+                { id: 4, type: 'red', pst: 1, run: true, step: 1 },]
+                // type คือ ผลไม้
+                // pst จุดเริ่มต้นของผลไม้
+                // run คือผลไม้เดินทางไปได้เรื่อยๆมั้ย
+                //มันเดินทางผ่านไปกี่วิ
+            },
+            methods: {
+                toggle: function () {
+                    if (this.isRightArrow == 1) {
+                        this.isRightArrow = 0;//red
+                    } else {
+                        this.isRightArrow = 1;
+                    }
+                },
+                restart: function () {
+                    location.reload(); //restart game
+                }
+            },
+            computed: { //ประมวลผลทุกๆครั้งที่ค่าทุกค่าเปลี่ยน
+
+            },
+            watch: {//ต้องการเปลี่ยนค่าอื่นตาม time
+                time: function (x) {
+                    let count = this.fruits.length
+                    for (let f in this.fruits) {
+                        //console.log(this.fruits[f].id)
+                        if (this.fruits[f].run) {
+                            this.fruits[f].pst += this.fruits[f].step;
+                        }
+                        if (this.fruits[f].pst == 10 && this.isRightArrow == 1) //toogle & yel
+                        {
+                            this.fruits[f].step = 3
+                        }
+                        if ((this.fruits[f].pst == 12 || this.fruits[f].pst == 16) && this.fruits[f].run == true) //yel & red ทึบๆ
+                        {
+                            if (this.fruits[f].type == 'red' && this.fruits[f].pst == 12) // ถ้าไปถูกช่อง
+                            {
+                                this.score++
+                            }
+                            if (this.fruits[f].type == 'red' && this.fruits[f].pst == 16) // ไปผิดช่อง
+                            {
+                                this.play = false
+                                clearInterval(playing)
+                            }
+                            if (this.fruits[f].type == 'yellow' && this.fruits[f].pst == 16) // ถ้าไปถูกช่อง
+                            {
+                                this.score++
+                            }
+                            if (this.fruits[f].type == 'yellow' && this.fruits[f].pst == 12) // ไปผิดช่อง
+                            {
+                                this.play = false
+                                clearInterval(playing)
+                            }
+                            this.fruits[f].run = false //ให้ผลไม้หยุดเดิน
+
+                        }
+                    }
+
+                    //if (this.time == 15) {
+                    //    this.play = false
+                    //    clearInterval(playing)
+                    //} กำหนดเวลาเล่น
+
+                    if (rand(1, 10) % 2 == 0) {
+                        if (rand(1, 10) % 2 == 0) {
+                            this.fruits.push({ id: nextFruitID, type: 'red', pst: 0, run: true, step: 1 })
+                        }
+                        else {
+                            this.fruits.push({ id: nextFruitID, type: 'yellow', pst: 0, run: true, step: 1 })
+                        }
+                        nextFruitID++
+                    }
+                }
+            },
+        })//ดูแค่ค่าใดค่าหนึ่งที่เปลี่ยนไป
+
+        let playing = setInterval(function () {
+            app.time++
+        }, speed);// เมื่อครบ 1 วิ
+    </script>
+</body>
+
+</html>

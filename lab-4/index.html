@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Color Game - Multimedia Programming 2563 ITKMITL</title>
+	<link rel="stylesheet" type="text/css" href="../src/reset.css">
+	<link rel="stylesheet" type="text/css" href="lab.css">
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+</head>
+
+<body>
+	<div id="canvas">
+		<section id="canvas_header">
+			<div>
+				<h2>เหลือเวลา {{time}} วินาที</h2>
+				<h1>คอมโบ {{combo}}</h1>
+			</div>
+		</section>
+		<section id="canvas_main">
+			<main>
+				<a-dot v-for="i in row*row" :style="{
+					'--row':row,
+					'--h':h,
+					'--l':l+'%'
+				}" :data-pick="i == pick" @click="check(i == pick)"></a-dot>
+			</main>
+		</section>
+		<section id="canvas_footer">
+			<div>
+				<h3>คอมโบจะหมดใน {{ct}}</h3>
+				<h1>{{score}} คะแนน</h1>
+			</div>
+		</section>
+	</div>
+
+	<script>
+		let picklight = "20%" //เลือกว่ารอบนี้ อันพิเศษจะมีความสว่าง 20%
+
+		function rand(start, stop) {//สร้างฟังก์ชัน random ไว้ใช้
+			let shift = (stop - start) + 1
+			return Math.floor(Math.random() * 100 % shift) + start
+		}
+
+		let app = new Vue({
+			el: '#canvas',
+			data: {
+				row: 2, //จำนวนแถวที่จะมีในรอบนี้
+				h: 200, // hue ในรอบนี้
+				time: 15, //เวลาเริ่มต้น
+				score: 0, //คะแนนเริ่มต้น
+				pick: 1, //หมายเลขวงกลมที่จะสีแตกต่างจากก้อนอื่นๆ
+				l: 40,//ความสว่างของสีทั่วไปในรอบนี้
+				combo: 0,//จำนวนคอมโบ
+				ct: 0//นับเวลาถอยหลังก่อนคอมโบจะหมด
+			},
+			methods: {
+				check: function (e) {
+					//เช็คถูก-ผิด
+					console.log(e)
+					if (this.time > 0) {
+						if (e) {
+							this.correct()
+
+						} else {
+							this.incorrect()
+						}
+					}
+					//console.log(e.target)
+					//console.log(e.target.dataset.pick)
+				},
+				correct: function () {
+					this.row = rand(2, 6)
+					this.h = rand(0, 359)
+					this.score++
+					this.time += 2
+					this.combo++
+					this.ct = 3
+					this.pick = rand(1, this.row * this.row)
+					this.l--
+					console.log('Correct !@3#@!')
+				},
+				incorrect: function () {
+					this.combo = 0
+					this.ct = 0
+					this.time--
+					this.pick = rand(1, this.row * this.row)
+
+				},
+			}
+		})
+		//ทำให้แคนวาสมี --picklight ตามที่กำหนดไว้ข้างบนนี้
+		document.querySelector('#canvas').style.setProperty('--picklight', picklight);
+
+		let counter = setInterval(() => {
+			if (app.time > 0) {
+				app.time--
+				if (app.ct > 0) {
+					app.ct--
+				} else
+					app.combo = 0
+				console.log(app.ct)
+			} else {
+				clearInterval(counter)
+			}
+		}, 1000);
+	</script>
+</body>
+
+</html>
